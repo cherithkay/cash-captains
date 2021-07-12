@@ -10,11 +10,11 @@
 <body>
     <div class="row">
         <div class="col-md-10 mr-auto ml-auto">
-    <h1> Max The Loan ChatBot</h1>
+    <h1>Dentrice AI ChatBot</h1>
     <form>
         <div id="chatbox">
             <div class="col-md-8 ml-auto mr-auto">
-                <p class="botText"><span>Hi! I'm Max. I am finacial guidance chatbot for students who have questions about student loans. Feel free to ask me anything! Disclamer: I am merely at chat bot and should not be used in place of a licensed professional.</span></p>
+                <p class="botText"><span>Hi! I'm Your bot.</span></p>
             </div>
         </div>
         <div id="userInput" class="row">
