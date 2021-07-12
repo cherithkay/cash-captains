@@ -5,7 +5,7 @@ import numpy as np
 import pickle
 import json
 from flask import Flask, render_template, request
-#from flask_ngrok import run_with_ngrok
+#from flask_ngrok import run_with_ngrok - FOR LOCAL RUNS
 import nltk
 from keras.models import load_model
 from nltk.stem import WordNetLemmatizer
@@ -19,21 +19,23 @@ words = pickle.load(open("words.pkl", "rb"))
 classes = pickle.load(open("classes.pkl", "rb"))
 
 app = Flask(__name__)
-#run_with_ngrok(app) 
+# run_with_ngrok(app) - FOR LOCAL RUNS
 
+# render ui
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
+# get response function
 @app.route("/get", methods=["POST"])
 def chatbot_response():
     msg = request.form["msg"]
-    if msg.startswith('my name is'):
-        name = msg[11:]
-        ints = predict_class(msg, model)
-        res1 = getResponse(ints, intents)
-        res =res1.replace("{n}",name)
+    if msg.startswith('my name is'): # handles users name 
+        name = msg[11:] # get name
+        ints = predict_class(msg, model) # get class of responses 
+        res1 = getResponse(ints, intents) # get actual response
+        res =res1.replace("{n}",name) # insert name and response 
     elif msg.startswith('hi my name is'):
         name = msg[14:]
         ints = predict_class(msg, model)
@@ -42,13 +44,13 @@ def chatbot_response():
     else:
         ints = predict_class(msg, model)
         res = getResponse(ints, intents)
-    return res
+    return res # return response 
 
 
-# chat functionalities
+# convert sentence into readable format
 def clean_up_sentence(sentence):
-    sentence_words = nltk.word_tokenize(sentence)
-    sentence_words = [lemmatizer.lemmatize(word.lower()) for word in sentence_words]
+    sentence_words = nltk.word_tokenize(sentence) # seperate words 
+    sentence_words = [lemmatizer.lemmatize(word.lower()) for word in sentence_words] #simplify words
     return sentence_words
 
 
@@ -82,16 +84,18 @@ def predict_class(sentence, model):
     return return_list
 
 
-def getResponse(ints, intents_json):
+# get initial response
+def getResponse(ints, intents_json): 
     tag = ints[0]["intent"]
     list_of_intents = intents_json["intents"]
     for i in list_of_intents:
         if i["tag"] == tag:
-            result = random.choice(i["responses"])
+            result = random.choice(i["responses"]) # randomly pick response
             break
     return result
 
 
+# main method
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080))) # run flask app and expose port 8080
 
